@@ -1,0 +1,1 @@
+{{ Form::email($fieldName, $fieldValue, array('class' => 'form-control')) }}
