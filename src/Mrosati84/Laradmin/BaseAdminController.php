@@ -14,6 +14,11 @@ class BaseAdminController extends Controller
     const RELATIONSHIP_TYPE   = 0;
     const RELATIONSHIP_MODEL  = 1;
     const RELATIONSHIP_STRING = 2;
+    const UNASSOCIATE         = 0;
+
+    const FIRST_ITEM          = 0;
+
+    const EMPTY_ITEM          = '---';
 
     private $className;
     private $lowercaseClassName;
@@ -28,37 +33,70 @@ class BaseAdminController extends Controller
         $this->prefix = Config::get('laradmin.prefix');
     }
 
+    /**
+     * returns the capitalized class name
+     * @return string
+     */
     public function getClassName()
     {
         return $this->className;
     }
 
+    /**
+     * get the lower-cased class name
+     * @return string
+     */
     public function getLowercaseClassName()
     {
         return $this->lowercaseClassName;
     }
 
+    /**
+     * get the fields for this entity
+     * @return array
+     */
     public function getFields()
     {
         return $this->fields;
     }
 
+    /**
+     * get the route prefix for laradmin
+     * @return string
+     */
     public function getPrefix()
     {
         return $this->prefix;
     }
 
+    /**
+     * get the route string for an entity, given an action name
+     * @param  string $action the action name
+     * @return string
+     */
     private function getRouteForEntity($action = 'index')
     {
         return $this->getPrefix() . '.' .
             $this->getLowercaseClassName() . '.' . $action;
     }
 
+    /**
+     * get the field type
+     * @param  string $className the class name
+     * @param  string $fieldName the field name
+     * @return string
+     */
     private function getFieldType($className, $fieldName)
     {
         return Config::get('laradmin.entities.' . $className . '.fields.' . $fieldName . '.type');
     }
 
+    /**
+     * get the custom render method name as a string
+     * @param  string $actionName the action name
+     * @param  string $fieldName  the field name
+     * @return string
+     */
     private function getCustomRenderMethodName($actionName, $fieldName)
     {
         return 'render' . ucfirst($actionName) . ucfirst(camel_case(strtolower($fieldName)));
@@ -179,7 +217,7 @@ class BaseAdminController extends Controller
                 case 'datetime':
                 return View::make('laradmin::form-fields/datetime', array(
                     'fieldName' => $fieldName,
-                    'fieldValue' => $fieldValue
+                    'fieldValue' => ($fieldValue) ? $fieldValue : date('Y-m-d H:i:s')
                 ));
             }
 
@@ -191,37 +229,66 @@ class BaseAdminController extends Controller
             $relationshipString = $relationship[self::RELATIONSHIP_STRING];
 
             switch($relationshipType) {
+                /** ====================
+                 * HAS MANY RELATIONSHIP
+                 * ================== */
                 case 'HasMany':
-                return Form::select($fieldName . '[]',
-                    $relationshipModel::lists($relationshipString, 'id'),
-                    ($fieldValue) ? $fieldValue->lists('id') : null,
-                    array('multiple', 'class' => 'form-control')
-                );
+                return View::make('laradmin::form-fields/hasmany', array(
+                    'fieldName' => $fieldName,
+                    'fieldValue' => $fieldValue,
+                    'relationshipModel' => $relationshipModel,
+                    'relationshipString' => $relationshipString,
+                ));
 
+                /** ===========================
+                 * BELONGS TO MANY RELATIONSHIP
+                 * ========================= */
                 case 'BelongsToMany':
-                return Form::select($fieldName . '[]',
-                    $relationshipModel::lists($relationshipString, 'id'),
-                    ($fieldValue) ? $fieldValue->lists('id') : null,
-                    array('multiple', 'class' => 'form-control')
-                );
+                return View::make('laradmin::form-fields/belongstomany', array(
+                    'fieldName' => $fieldName,
+                    'fieldValue' => $fieldValue,
+                    'relationshipModel' => $relationshipModel,
+                    'relationshipString' => $relationshipString,
+                ));
 
-                case 'BelongsTo':
-                return Form::select($fieldName,
-                    $relationshipModel::lists($relationshipString, 'id'),
-                    ($fieldValue) ? $fieldValue->id : null,
-                    array('class' => 'form-control')
-                );
-
+                /** ===================
+                 * HAS ONE RELATIONSHIP
+                 * ================= */
                 case 'HasOne':
-                return Form::select($fieldName,
-                    $relationshipModel::lists($relationshipString, 'id'),
-                    ($fieldValue) ? $fieldValue->id : null,
-                    array('class' => 'form-control')
-                );
+                $lists = $relationshipModel::lists($relationshipString, 'id');
+                $lists[self::FIRST_ITEM] = self::EMPTY_ITEM;
+                ksort($lists);
+
+                return View::make('laradmin::form-fields/hasone', array(
+                    'fieldName' => $fieldName,
+                    'lists' => $lists,
+                    'default' => ($fieldValue) ? $fieldValue->id : 0,
+                    'attributes' => array('class' => 'form-control')
+                ));
+
+                /** ======================
+                 * BELONGS TO RELATIONSHIP
+                 * ==================== */
+                case 'BelongsTo':
+                $lists = $relationshipModel::lists($relationshipString, 'id');
+                $lists[self::FIRST_ITEM] = self::EMPTY_ITEM;
+                ksort($lists);
+
+                return View::make('laradmin::form-fields/belongsto', array(
+                    'fieldName' => $fieldName,
+                    'lists' => $lists,
+                    'default' => ($fieldValue) ? $fieldValue->id : 0,
+                    'attributes' => array('class' => 'form-control')
+                ));
             }
         };
     }
 
+    /**
+     * determines if a field type is a relationship
+     * @param  string  $relationship the relationship type
+     * @return boolean
+     */
     private function isRelationship($relationship) {
         return count($relationship) > 1;
     }
@@ -247,7 +314,16 @@ class BaseAdminController extends Controller
                     $relatedResult = $relationshipModel::find($relatedIndex);
                     $lowercaseClassName = $this->getLowercaseClassName();
 
-                    $record->$fieldName()->associate($relatedResult);
+                    // dissociate related model
+                    if ($relatedIndex == self::UNASSOCIATE) {
+                        $record->$fieldName()->dissociate();
+                    }
+
+                    // associate model
+                    if (count($relatedResult)) {
+                        $record->$fieldName()->associate($relatedResult);
+                    }
+
                     $record->save();
 
                     break;
@@ -258,9 +334,21 @@ class BaseAdminController extends Controller
                     case 'HasOne':
                     $relatedIndex = Input::get($fieldName);
                     $relatedResult = $relationshipModel::find($relatedIndex);
+                    $className = $this->getClassName();
                     $lowercaseClassName = $this->getLowercaseClassName();
 
-                    $record->$fieldName()->save($relatedResult);
+                    if ($relatedIndex == self::UNASSOCIATE) {
+                        if ($record->$fieldName()->get()->first()) {
+                            $associationId = $record->$fieldName()->get()->first()->id;
+                            $associatedRecord = $relationshipModel::find($associationId);
+                            $associatedRecord->$lowercaseClassName()->dissociate();
+                        }
+                    }
+
+                    if ($relatedResult) {
+                        $record->$fieldName()->save($relatedResult);
+                    }
+
                     $record->save();
 
                     break;
