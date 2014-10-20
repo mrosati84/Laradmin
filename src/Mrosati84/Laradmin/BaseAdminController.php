@@ -92,6 +92,14 @@ class BaseAdminController extends Controller
                             'relationshipString' => $relationshipString
                         ));
 
+                        case 'HasOne':
+                        return View::make('laradmin::fields/hasone', array(
+                            'prefix' => $this->getPrefix(),
+                            'fieldValue' => $fieldValue,
+                            'relationshipModel' => $relationshipModel,
+                            'relationshipString' => $relationshipString
+                        ));
+
                         case 'HasMany':
                         if (count($fieldValue)) {
                             return View::make('laradmin::fields/hasmany', array(
@@ -203,6 +211,13 @@ class BaseAdminController extends Controller
                     ($fieldValue) ? $fieldValue->id : null,
                     array('class' => 'form-control')
                 );
+
+                case 'HasOne':
+                return Form::select($fieldName,
+                    $relationshipModel::lists($relationshipString, 'id'),
+                    ($fieldValue) ? $fieldValue->id : null,
+                    array('class' => 'form-control')
+                );
             }
         };
     }
@@ -233,6 +248,19 @@ class BaseAdminController extends Controller
                     $lowercaseClassName = $this->getLowercaseClassName();
 
                     $record->$fieldName()->associate($relatedResult);
+                    $record->save();
+
+                    break;
+
+                    /** ========================
+                     * HAS ONE RELATIONSHIP TYPE
+                     * ====================== */
+                    case 'HasOne':
+                    $relatedIndex = Input::get($fieldName);
+                    $relatedResult = $relationshipModel::find($relatedIndex);
+                    $lowercaseClassName = $this->getLowercaseClassName();
+
+                    $record->$fieldName()->save($relatedResult);
                     $record->save();
 
                     break;
