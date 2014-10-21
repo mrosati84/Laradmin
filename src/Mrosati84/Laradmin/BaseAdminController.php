@@ -361,21 +361,30 @@ class BaseAdminController extends Controller
                      * ======================= */
                     case 'HasMany':
                     $relatedIndexes = Input::get($fieldName);
+                    $lowercaseClassName = $this->getLowercaseClassName();
+                    $relatedResults = array();
 
-                    if (!count($relatedIndexes)) {
+                    // dissociate
+                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                        foreach($record->$fieldName as $relatedResult) {
+                            $relatedResult->$lowercaseClassName()->dissociate();
+                            $relatedResult->save();
+                        }
+
                         break;
                     }
 
-                    $relatedResults = array();
-
                     foreach ($relatedIndexes as $relatedIndex) {
-                        array_push($relatedResults,
-                            $relationshipModel::find($relatedIndex));
+                        if ($relatedIndex != 0) {
+                            array_push($relatedResults,
+                                $relationshipModel::find($relatedIndex));
+                        }
                     }
 
                     $record
                         ->$fieldName()
                         ->saveMany($relatedResults);
+
                     break;
 
                     /** ================================
@@ -384,13 +393,18 @@ class BaseAdminController extends Controller
                     case 'BelongsToMany':
                     $relatedIndexes = Input::get($fieldName);
 
-                    if (!count($relatedIndexes)) {
+                    // dissociate
+                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                        $toDetach = $record->$fieldName->lists('id');
+                        $record->$fieldName()->detach($toDetach);
+
                         break;
                     }
 
                     $record
                         ->$fieldName()
                         ->sync($relatedIndexes);
+
                     break;
                 } // switch
             } // if
