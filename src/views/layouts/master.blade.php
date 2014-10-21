@@ -9,11 +9,7 @@
     <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/vendor/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/vendor/bootstrap-theme.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/vendor/jquery-ui.css') }}">
-    <style>
-        .right-floated {
-            float: right;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/main.css') }}">
 </head>
 <body>
 
