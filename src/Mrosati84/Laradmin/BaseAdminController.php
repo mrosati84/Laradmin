@@ -29,8 +29,8 @@ class BaseAdminController extends Controller
     {
         $this->className = $className;
         $this->lowercaseClassName = strtolower($className);
-        $this->fields = Config::get('laradmin.entities.' . $className . '.fields');
-        $this->prefix = Config::get('laradmin.prefix');
+        $this->fields = Config::get('laradmin::entities.' . $className . '.fields');
+        $this->prefix = Config::get('laradmin::prefix');
     }
 
     /**
@@ -88,7 +88,7 @@ class BaseAdminController extends Controller
      */
     private function getFieldType($className, $fieldName)
     {
-        return Config::get('laradmin.entities.' . $className . '.fields.' . $fieldName . '.type');
+        return Config::get('laradmin::entities.' . $className . '.fields.' . $fieldName . '.type');
     }
 
     /**
@@ -177,7 +177,7 @@ class BaseAdminController extends Controller
     public function getDefaultFormFieldRenderer()
     {
         return function($actionName, $className, $fieldName, $fieldValue=null) {
-            $fieldType = Config::get('laradmin.entities.' . $className .
+            $fieldType = Config::get('laradmin::entities.' . $className .
                 '.fields.' . $fieldName . '.type');
 
             $customRenderMethod = 'render' . ucfirst($actionName) .

@@ -6,14 +6,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{{ route('laradmin.index') }}">{{ Config::get('laradmin.title', 'Administration') }}</a>
+        <a class="navbar-brand" href="{{ route('laradmin.index') }}">{{ Config::get('laradmin::title', 'Administration') }}</a>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-            @foreach(Config::get('laradmin.entities') as $entity => $properties)
+            @foreach(Config::get('laradmin::entities') as $entity => $properties)
                 <li class="{{ (Request::is('*'.strtolower($entity).'*')) ? 'active' : '' }}">
-                    <a href="{{ route(Config::get('laradmin.prefix') . '.' . strtolower($entity) . '.index') }}">{{ ucfirst($entity) }}</a>
+                    <a href="{{ route(Config::get('laradmin::prefix') . '.' . strtolower($entity) . '.index') }}">{{ ucfirst($entity) }}</a>
                 </li>
             @endforeach
         </ul>

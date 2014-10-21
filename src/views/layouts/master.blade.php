@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ Config::get('laradmin.title', 'Administration') }}</title>
+    <title>{{ Config::get('laradmin::title', 'Administration') }}</title>
 
     <!-- stylesheets -->
     <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/vendor/bootstrap.min.css') }}">
