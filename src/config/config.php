@@ -11,6 +11,7 @@ return array(
     // html <title> for the administrator
     'title' => 'Backend',
 
+    // the default entity handled by Laradmin
     'defaultEntity' => 'Post',
 
     // BEGIN: managed entities list
