@@ -15,7 +15,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div ng-controller="CreateController" class="col-md-12">
             @include('laradmin::forms/create', array(
                 'prefix' => $prefix,
                 'lowercaseClassName' => $lowercaseClassName,
