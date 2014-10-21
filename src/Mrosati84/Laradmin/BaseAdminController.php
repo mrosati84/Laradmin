@@ -338,10 +338,13 @@ class BaseAdminController extends Controller
                     $lowercaseClassName = $this->getLowercaseClassName();
 
                     if ($relatedIndex == self::UNASSOCIATE) {
-                        if ($record->$fieldName()->get()->first()) {
-                            $associationId = $record->$fieldName()->get()->first()->id;
-                            $associatedRecord = $relationshipModel::find($associationId);
+                        if ($record->$fieldName) {
+                            $associatedRecord = $record->$fieldName;
                             $associatedRecord->$lowercaseClassName()->dissociate();
+
+                            $associatedRecord->save();
+
+                            break;
                         }
                     }
 
