@@ -102,6 +102,9 @@ class BaseAdminController extends Controller
         return 'render' . ucfirst($actionName) . ucfirst(camel_case(strtolower($fieldName)));
     }
 
+    /**
+     * @return callable
+     */
     public function getDefaultFieldRenderer()
     {
         return function($actionName, $className, $fieldName, $fieldValue) {
@@ -174,6 +177,9 @@ class BaseAdminController extends Controller
         };
     }
 
+    /**
+     * @return callable
+     */
     public function getDefaultFormFieldRenderer()
     {
         return function($actionName, $className, $fieldName, $fieldValue=null) {
@@ -293,6 +299,10 @@ class BaseAdminController extends Controller
         return count($relationship) > 1;
     }
 
+    /**
+     * @param $record the Eloquent row
+     * @return void
+     */
     private function saveRelatedModels($record)
     {
         $fields = $this->getFields();
@@ -411,6 +421,9 @@ class BaseAdminController extends Controller
         } // foreach
     }
 
+    /**
+     * @return Response
+     */
     public function index()
     {
         $className = $this->getClassName();
@@ -428,6 +441,9 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @return Response
+     */
     public function create()
     {
         $className = $this->getClassName();
@@ -446,6 +462,9 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @return Response
+     */
     public function store()
     {
         $className = $this->getClassName();
@@ -473,6 +492,10 @@ class BaseAdminController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function show($id)
     {
         $className = $this->getClassName();
@@ -490,6 +513,10 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function edit($id)
     {
         $className = $this->getClassName();
@@ -508,6 +535,10 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function update($id)
     {
         $className = $this->getClassName();
@@ -534,6 +565,10 @@ class BaseAdminController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $className = $this->getClassName();
