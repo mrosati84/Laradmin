@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\App;
 
 class LaradminServiceProvider extends ServiceProvider {
@@ -28,6 +29,11 @@ class LaradminServiceProvider extends ServiceProvider {
             App::bind($fullClassName, function() use ($fullClassName, $entity) {
                 return new $fullClassName($entity);
             });
+
+            // register laradmin index route (just a redirect to default entity)
+            Route::get($prefix, array('as' => 'laradmin.index', function() use ($prefix) {
+                return Redirect::route($prefix . '.' . strtolower(Config::get('laradmin.defaultEntity')) . '.index');
+            }));
 
             // register entities routes
             Route::group(array('prefix' => $prefix), function() use ($entity, $fullClassName) {
