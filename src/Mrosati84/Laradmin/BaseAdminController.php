@@ -29,8 +29,8 @@ class BaseAdminController extends Controller
     {
         $this->className = $className;
         $this->lowercaseClassName = strtolower($className);
-        $this->fields = Config::get('laradmin.entities.' . $className . '.fields');
-        $this->prefix = Config::get('laradmin.prefix');
+        $this->fields = Config::get('laradmin::entities.' . $className . '.fields');
+        $this->prefix = Config::get('laradmin::prefix');
     }
 
     /**
@@ -88,7 +88,7 @@ class BaseAdminController extends Controller
      */
     private function getFieldType($className, $fieldName)
     {
-        return Config::get('laradmin.entities.' . $className . '.fields.' . $fieldName . '.type');
+        return Config::get('laradmin::entities.' . $className . '.fields.' . $fieldName . '.type');
     }
 
     /**
@@ -102,6 +102,9 @@ class BaseAdminController extends Controller
         return 'render' . ucfirst($actionName) . ucfirst(camel_case(strtolower($fieldName)));
     }
 
+    /**
+     * @return callable
+     */
     public function getDefaultFieldRenderer()
     {
         return function($actionName, $className, $fieldName, $fieldValue) {
@@ -174,10 +177,13 @@ class BaseAdminController extends Controller
         };
     }
 
+    /**
+     * @return callable
+     */
     public function getDefaultFormFieldRenderer()
     {
         return function($actionName, $className, $fieldName, $fieldValue=null) {
-            $fieldType = Config::get('laradmin.entities.' . $className .
+            $fieldType = Config::get('laradmin::entities.' . $className .
                 '.fields.' . $fieldName . '.type');
 
             $customRenderMethod = 'render' . ucfirst($actionName) .
@@ -293,6 +299,10 @@ class BaseAdminController extends Controller
         return count($relationship) > 1;
     }
 
+    /**
+     * @param $record the Eloquent row
+     * @return void
+     */
     private function saveRelatedModels($record)
     {
         $fields = $this->getFields();
@@ -338,10 +348,13 @@ class BaseAdminController extends Controller
                     $lowercaseClassName = $this->getLowercaseClassName();
 
                     if ($relatedIndex == self::UNASSOCIATE) {
-                        if ($record->$fieldName()->get()->first()) {
-                            $associationId = $record->$fieldName()->get()->first()->id;
-                            $associatedRecord = $relationshipModel::find($associationId);
+                        if ($record->$fieldName) {
+                            $associatedRecord = $record->$fieldName;
                             $associatedRecord->$lowercaseClassName()->dissociate();
+
+                            $associatedRecord->save();
+
+                            break;
                         }
                     }
 
@@ -358,21 +371,53 @@ class BaseAdminController extends Controller
                      * ======================= */
                     case 'HasMany':
                     $relatedIndexes = Input::get($fieldName);
+                    $lowercaseClassName = $this->getLowercaseClassName();
+                    $relatedResults = array();
 
-                    if (!count($relatedIndexes)) {
+                    // dissociate all the related models from the record
+                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                        foreach($record->$fieldName as $relatedResult) {
+                            $relatedResult->$lowercaseClassName()->dissociate();
+                            $relatedResult->save();
+                        }
+
                         break;
                     }
 
-                    $relatedResults = array();
+                    // handle differences between what is transmitted and
+                    // what is already associated to the record
+                    if (count($relatedIndexes) > 1) {
+                        array_pop($relatedIndexes); // remove last special item
 
+                        // make a diff between the transmitted ids and the
+                        // ids already associated to the record
+                        $alreadyAssociated = $record->$fieldName->lists('id');
+                        $idsToUnassociate = array_values(array_diff($alreadyAssociated, $relatedIndexes));
+
+                        // unassociate one by one
+                        foreach($idsToUnassociate as $idToUnassociate) {
+                            $modelToDissociate = $relationshipModel::find($idToUnassociate);
+
+                            $modelToDissociate
+                                ->$lowercaseClassName()
+                                ->dissociate();
+
+                            $modelToDissociate->save();
+                        }
+                    }
+
+                    // associate transmitted ids to the record
                     foreach ($relatedIndexes as $relatedIndex) {
-                        array_push($relatedResults,
-                            $relationshipModel::find($relatedIndex));
+                        if ($relatedIndex != 0) {
+                            array_push($relatedResults,
+                                $relationshipModel::find($relatedIndex));
+                        }
                     }
 
                     $record
                         ->$fieldName()
                         ->saveMany($relatedResults);
+
                     break;
 
                     /** ================================
@@ -381,19 +426,29 @@ class BaseAdminController extends Controller
                     case 'BelongsToMany':
                     $relatedIndexes = Input::get($fieldName);
 
-                    if (!count($relatedIndexes)) {
+                    // dissociate
+                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                        $toDetach = $record->$fieldName->lists('id');
+                        $record->$fieldName()->detach($toDetach);
+
                         break;
                     }
+
+                    array_pop($relatedIndexes); // remove last speciali item
 
                     $record
                         ->$fieldName()
                         ->sync($relatedIndexes);
+
                     break;
                 } // switch
             } // if
         } // foreach
     }
 
+    /**
+     * @return Response
+     */
     public function index()
     {
         $className = $this->getClassName();
@@ -411,6 +466,9 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @return Response
+     */
     public function create()
     {
         $className = $this->getClassName();
@@ -429,6 +487,9 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @return Response
+     */
     public function store()
     {
         $className = $this->getClassName();
@@ -456,6 +517,10 @@ class BaseAdminController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function show($id)
     {
         $className = $this->getClassName();
@@ -473,6 +538,10 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function edit($id)
     {
         $className = $this->getClassName();
@@ -491,6 +560,10 @@ class BaseAdminController extends Controller
         ));
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function update($id)
     {
         $className = $this->getClassName();
@@ -517,6 +590,10 @@ class BaseAdminController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function destroy($id)
     {
         $className = $this->getClassName();

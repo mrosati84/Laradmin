@@ -13,13 +13,10 @@ class LaradminServiceProvider extends ServiceProvider {
     public function boot()
     {
         $this->package('mrosati84/laradmin');
-    }
 
-    public function register()
-    {
-        $prefix = Config::get('laradmin.prefix');
-        $namespace = Config::get('laradmin.namespace');
-        $entities = Config::get('laradmin.entities');
+        $prefix = Config::get('laradmin::prefix');
+        $namespace = Config::get('laradmin::namespace');
+        $entities = Config::get('laradmin::entities');
 
         foreach($entities as $entity => $properties) {
             $fullClassName = $namespace . '\\' . $entity . 'Admin';
@@ -32,7 +29,7 @@ class LaradminServiceProvider extends ServiceProvider {
 
             // register laradmin index route (just a redirect to default entity)
             Route::get($prefix, array('as' => 'laradmin.index', function() use ($prefix) {
-                return Redirect::route($prefix . '.' . strtolower(Config::get('laradmin.defaultEntity')) . '.index');
+                return Redirect::route($prefix . '.' . strtolower(Config::get('laradmin::defaultEntity')) . '.index');
             }));
 
             // register entities routes
@@ -40,6 +37,10 @@ class LaradminServiceProvider extends ServiceProvider {
                 Route::resource(strtolower($entity), $fullClassName);
             });
         }
+    }
+
+    public function register()
+    {
     }
 
     public function provides()

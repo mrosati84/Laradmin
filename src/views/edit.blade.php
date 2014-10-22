@@ -15,7 +15,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div ng-controller="EditController" class="col-md-12">
             @include('laradmin::forms/edit', array(
                 'results' => $results,
                 'prefix' => $prefix,
