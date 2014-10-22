@@ -434,6 +434,8 @@ class BaseAdminController extends Controller
                         break;
                     }
 
+                    array_pop($relatedIndexes); // remove last speciali item
+
                     $record
                         ->$fieldName()
                         ->sync($relatedIndexes);
