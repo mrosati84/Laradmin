@@ -472,7 +472,6 @@ class BaseAdminController extends Controller
     public function create()
     {
         $className = $this->getClassName();
-        $results = $className::all();
 
         return View::make('laradmin::create', array(
             // TODO: these sould be always injected in views
@@ -481,9 +480,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFormFieldRenderer(),
-            'storeRoute' => $this->getRouteForEntity('store'),
-
-            'results' => $results
+            'storeRoute' => $this->getRouteForEntity('store')
         ));
     }
 
