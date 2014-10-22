@@ -12,7 +12,10 @@
     <!-- save -->
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            {{ Form::submit('Save', array('class' => 'btn btn-success')) }}
+            <button type="submit" class="btn btn-success">
+                <i class="glyphicon glyphicon-floppy-disk"></i>
+                <span>Save</span>
+            </button>
         </div>
     </div>
 {{ Form::close() }}
