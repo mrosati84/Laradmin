@@ -374,7 +374,7 @@ class BaseAdminController extends Controller
                     $lowercaseClassName = $this->getLowercaseClassName();
                     $relatedResults = array();
 
-                    // dissociate
+                    // dissociate all the related models from the record
                     if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
                         foreach($record->$fieldName as $relatedResult) {
                             $relatedResult->$lowercaseClassName()->dissociate();
@@ -384,6 +384,29 @@ class BaseAdminController extends Controller
                         break;
                     }
 
+                    // handle differences between what is transmitted and
+                    // what is already associated to the record
+                    if (count($relatedIndexes) > 1) {
+                        array_pop($relatedIndexes); // remove last special item
+
+                        // make a diff between the transmitted ids and the
+                        // ids already associated to the record
+                        $alreadyAssociated = $record->$fieldName->lists('id');
+                        $idsToUnassociate = array_values(array_diff($alreadyAssociated, $relatedIndexes));
+
+                        // unassociate one by one
+                        foreach($idsToUnassociate as $idToUnassociate) {
+                            $modelToDissociate = $relationshipModel::find($idToUnassociate);
+
+                            $modelToDissociate
+                                ->$lowercaseClassName()
+                                ->dissociate();
+
+                            $modelToDissociate->save();
+                        }
+                    }
+
+                    // associate transmitted ids to the record
                     foreach ($relatedIndexes as $relatedIndex) {
                         if ($relatedIndex != 0) {
                             array_push($relatedResults,
