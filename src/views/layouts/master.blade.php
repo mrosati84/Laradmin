@@ -13,11 +13,9 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="row">
-        @include('laradmin::navigation')
-        @yield('content')
-    </div>
+<div class="container-fluid">
+    @include('laradmin::navigation')
+    @yield('content')
 </div>
 
 <!-- javascripts -->
