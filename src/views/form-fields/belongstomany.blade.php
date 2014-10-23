@@ -5,7 +5,7 @@
             ($fieldValue) ? $fieldValue->lists('id') : null,
             array('multiple', 'class' => 'form-control')
         )}}
-        <input type="hidden" name="{{ $fieldName }}[]" value="0">
+        <input type="hidden" name="{{ $fieldName }}[]" value="">
     </div>
     <div class="col-sm-1">
         <a class="btn btn-primary right-floated" href="#">
