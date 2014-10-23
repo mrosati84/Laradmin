@@ -292,6 +292,28 @@ class BaseAdminController extends Controller
     }
 
     /**
+     * get the validation rules for entity. Parent method returns an empty
+     * array by default, this is intended to be overridden in child classes
+     * @return array
+     */
+    public function getValidationRules()
+    {
+        return array();
+    }
+
+    /**
+     * get the validator object for this entity
+     * @return Validator
+     */
+    public function getValidator()
+    {
+        return Validator::make(
+            Input::all(),
+            $this->getValidationRules()
+        );
+    }
+
+    /**
      * determines if a field type is a relationship
      * @param  string  $relationship the relationship type
      * @return boolean
@@ -493,22 +515,17 @@ class BaseAdminController extends Controller
         $className = $this->getClassName();
         $fields = $this->getFields();
 
+        // create new entity
         $newRecord = new $className;
 
-        // TODO: validation
-        // $validator = Validator::make(
-        //     Input::all(),
-        //     array(
-        //         'title' => 'required',
-        //         'body' => 'required'
-        //     )
-        // );
+        // validate entity
+        $validator = $this->getValidator();
 
-        // if ($validator->fails()) {
-        //     return Redirect::route($this->getRouteForEntity('create'))
-        //         ->withInput()
-        //         ->withErrors($validator);
-        // }
+        if ($validator->fails()) {
+            return Redirect::route($this->getRouteForEntity('create'))
+                ->withInput()
+                ->withErrors($validator);
+        }
 
         // save regular columns
         foreach($fields as $fieldName => $fieldProperties) {
@@ -583,6 +600,15 @@ class BaseAdminController extends Controller
         $fields = $this->getFields();
 
         $record = $className::find($id);
+
+        // validate entity
+        $validator = $this->getValidator();
+
+        if ($validator->fails()) {
+            return Redirect::route($this->getRouteForEntity('edit'), array('id' => $id))
+                ->withInput()
+                ->withErrors($validator);
+        }
 
         // save regular columns
         foreach($fields as $fieldName => $fieldProperties) {
