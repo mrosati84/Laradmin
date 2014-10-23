@@ -27,13 +27,19 @@ class LaradminServiceProvider extends ServiceProvider {
                 return new $fullClassName($entity);
             });
 
+            // register custom filters classes
+            App::bind('AuthenticationFilter', 'Mrosati84\Laradmin\Filters\AuthenticationFilter');
+
+            // register custom route filters
+            Route::filter('laradmin.auth', 'AuthenticationFilter');
+
             // register laradmin index route (just a redirect to default entity)
             Route::get($prefix, array('as' => 'laradmin.index', function() use ($prefix) {
                 return Redirect::route($prefix . '.' . strtolower(Config::get('laradmin::defaultEntity')) . '.index');
             }));
 
             // register entities routes
-            Route::group(array('prefix' => $prefix), function() use ($entity, $fullClassName) {
+            Route::group(array('prefix' => $prefix, 'before' => 'laradmin.auth'), function() use ($entity, $fullClassName) {
                 Route::resource(strtolower($entity), $fullClassName);
             });
         }
