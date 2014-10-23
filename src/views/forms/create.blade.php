@@ -1,4 +1,4 @@
-{{ Form::open(array('route' => $storeRoute, 'method' => 'POST', 'class' => 'form-horizontal')) }}
+{{ Form::open(array('route' => $formRoute, 'method' => 'POST', 'class' => 'form-horizontal')) }}
     <!-- loop fields -->
     @foreach($fields as $fieldName => $fieldProperties)
         <div class="form-group">
