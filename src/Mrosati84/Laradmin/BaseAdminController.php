@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class BaseAdminController extends Controller
 {
@@ -493,6 +494,21 @@ class BaseAdminController extends Controller
         $fields = $this->getFields();
 
         $newRecord = new $className;
+
+        // TODO: validation
+        // $validator = Validator::make(
+        //     Input::all(),
+        //     array(
+        //         'title' => 'required',
+        //         'body' => 'required'
+        //     )
+        // );
+
+        // if ($validator->fails()) {
+        //     return Redirect::route($this->getRouteForEntity('create'))
+        //         ->withInput()
+        //         ->withErrors($validator);
+        // }
 
         // save regular columns
         foreach($fields as $fieldName => $fieldProperties) {
