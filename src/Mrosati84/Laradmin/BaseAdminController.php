@@ -15,11 +15,12 @@ class BaseAdminController extends Controller
     const RELATIONSHIP_TYPE   = 0;
     const RELATIONSHIP_MODEL  = 1;
     const RELATIONSHIP_STRING = 2;
-    const UNASSOCIATE         = 0;
+    const UNASSOCIATE         = '';
 
     const FIRST_ITEM          = 0;
 
-    const EMPTY_ITEM          = '---';
+    const EMPTY_INDEX         = '';
+    const EMPTY_VALUE         = '---';
 
     private $className;
     private $lowercaseClassName;
@@ -263,7 +264,7 @@ class BaseAdminController extends Controller
                  * ================= */
                 case 'HasOne':
                 $lists = $relationshipModel::lists($relationshipString, 'id');
-                $lists[self::FIRST_ITEM] = self::EMPTY_ITEM;
+                $lists[self::EMPTY_INDEX] = self::EMPTY_VALUE;
                 ksort($lists);
 
                 return View::make('laradmin::form-fields/hasone', array(
@@ -278,7 +279,7 @@ class BaseAdminController extends Controller
                  * ==================== */
                 case 'BelongsTo':
                 $lists = $relationshipModel::lists($relationshipString, 'id');
-                $lists[self::FIRST_ITEM] = self::EMPTY_ITEM;
+                $lists[self::EMPTY_INDEX] = self::EMPTY_VALUE;
                 ksort($lists);
 
                 return View::make('laradmin::form-fields/belongsto', array(
