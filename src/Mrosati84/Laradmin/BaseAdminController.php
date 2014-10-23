@@ -410,7 +410,7 @@ class BaseAdminController extends Controller
 
                     // handle differences between what is transmitted and
                     // what is already associated to the record
-                    if (count($relatedIndexes) > 1) {
+                    if (count($relatedIndexes) > 0) {
                         // make a diff between the transmitted ids and the
                         // ids already associated to the record
                         $alreadyAssociated = $record->$fieldName->lists('id');
