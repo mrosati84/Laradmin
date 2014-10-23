@@ -399,7 +399,7 @@ class BaseAdminController extends Controller
                     $relatedResults = array();
 
                     // dissociate all the related models from the record
-                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                    if (!$relatedIndexes) {
                         foreach($record->$fieldName as $relatedResult) {
                             $relatedResult->$lowercaseClassName()->dissociate();
                             $relatedResult->save();
@@ -411,8 +411,6 @@ class BaseAdminController extends Controller
                     // handle differences between what is transmitted and
                     // what is already associated to the record
                     if (count($relatedIndexes) > 1) {
-                        array_pop($relatedIndexes); // remove last special item
-
                         // make a diff between the transmitted ids and the
                         // ids already associated to the record
                         $alreadyAssociated = $record->$fieldName->lists('id');
@@ -432,10 +430,8 @@ class BaseAdminController extends Controller
 
                     // associate transmitted ids to the record
                     foreach ($relatedIndexes as $relatedIndex) {
-                        if ($relatedIndex != 0) {
-                            array_push($relatedResults,
-                                $relationshipModel::find($relatedIndex));
-                        }
+                        array_push($relatedResults,
+                            $relationshipModel::find($relatedIndex));
                     }
 
                     $record
@@ -451,14 +447,12 @@ class BaseAdminController extends Controller
                     $relatedIndexes = Input::get($fieldName);
 
                     // dissociate
-                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                    if (!$relatedIndexes) {
                         $toDetach = $record->$fieldName->lists('id');
                         $record->$fieldName()->detach($toDetach);
 
                         break;
                     }
-
-                    array_pop($relatedIndexes); // remove last speciali item
 
                     $record
                         ->$fieldName()
