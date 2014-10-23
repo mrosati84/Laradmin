@@ -4,7 +4,6 @@ namespace Mrosati84\Laradmin;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
