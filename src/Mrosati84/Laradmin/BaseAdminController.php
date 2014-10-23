@@ -480,7 +480,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFormFieldRenderer(),
-            'storeRoute' => $this->getRouteForEntity('store')
+            'formRoute' => $this->getRouteForEntity('store')
         ));
     }
 
@@ -551,7 +551,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFormFieldRenderer(),
-            'updateRoute' => $this->getRouteForEntity('update'),
+            'formRoute' => $this->getRouteForEntity('update'),
 
             'results' => $results
         ));
