@@ -21,6 +21,8 @@ class BaseAdminController extends Controller
     const EMPTY_INDEX         = '';
     const EMPTY_VALUE         = '---';
 
+    const DEFAULT_PAGINATION  = 10;
+
     private $className;
     private $lowercaseClassName;
     private $fields;
@@ -469,7 +471,7 @@ class BaseAdminController extends Controller
     public function index()
     {
         $className = $this->getClassName();
-        $results = $className::all();
+        $results = $className::paginate(Config::get('laradmin::paginate', self::DEFAULT_PAGINATION));
 
         return View::make('laradmin::index', array(
             // TODO: these sould be always injected in views

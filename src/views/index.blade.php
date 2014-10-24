@@ -46,4 +46,6 @@
             @endif
         </div>
     </div>
+
+    @include('laradmin::pagination')
 @stop
