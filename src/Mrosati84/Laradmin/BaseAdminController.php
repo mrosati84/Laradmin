@@ -331,6 +331,23 @@ class BaseAdminController extends Controller
     }
 
     /**
+     * pre-process an input field, before saving it into the model
+     * @param  string $fieldName
+     * @param  mixed $fieldValue
+     * @return mixed
+     */
+    public function preprocessInputField($fieldName, $fieldValue)
+    {
+        $customPreprocessMethodName = 'preprocess' . ucfirst(camel_case(strtolower($fieldName)));
+
+        if (method_exists($this, $customPreprocessMethodName)) {
+            return $this->$customPreprocessMethodName($fieldValue);
+        }
+
+        return $fieldValue;
+    }
+
+    /**
      * @param $record the Eloquent row
      * @return void
      */
@@ -536,8 +553,11 @@ class BaseAdminController extends Controller
                 case 'number':
                 case 'text':
                 case 'email':
+                case 'password':
                 case 'datetime':
-                    $newRecord->$fieldName = Input::get($fieldName);
+                    $processedInput = $this->preprocessInputField($fieldName, Input::get($fieldName));
+                    $newRecord->$fieldName = $processedInput;
+
                     break;
             }
         }
@@ -619,8 +639,14 @@ class BaseAdminController extends Controller
                 case 'number':
                 case 'text':
                 case 'email':
+                case 'password':
                 case 'datetime':
-                    $record->$fieldName = Input::get($fieldName);
+                    $processedInput = $this->preprocessInputField($fieldName, Input::get($fieldName));
+
+                    if ($record->$fieldName != $processedInput) {
+                        $record->$fieldName = $processedInput;
+                    }
+
                     break;
             }
         }
