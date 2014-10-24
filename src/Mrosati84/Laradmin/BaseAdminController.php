@@ -211,6 +211,12 @@ class BaseAdminController extends Controller
                     'fieldValue' => $fieldValue
                 ));
 
+                case 'password':
+                return View::make('laradmin::form-fields/password', array(
+                    'fieldName' => $fieldName,
+                    'fieldValue' => $fieldValue
+                ));
+
                 case 'text':
                 return View::make('laradmin::form-fields/textarea', array(
                     'fieldName' => $fieldName,
