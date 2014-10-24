@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="text-center">
-                {{ $results->links() }}
+                {{ $results->appends(Input::all())->links() }}
             </div>
         </div>
     </div>
