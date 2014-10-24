@@ -1,8 +1,13 @@
-{{ Form::open(array('route' => $storeRoute, 'method' => 'POST', 'class' => 'form-horizontal')) }}
+{{ Form::open(array(
+    'method' => 'POST',
+    'route' => $formRoute,
+    'class' => 'form-horizontal')) }}
     <!-- loop fields -->
     @foreach($fields as $fieldName => $fieldProperties)
         <div class="form-group">
-            {{ Form::label(ucfirst($fieldProperties['label']), ucfirst($fieldProperties['label']), array('class' => 'col-sm-2 control-label')) }}
+            {{ Form::label(ucfirst($fieldProperties['label']),
+                ucfirst($fieldProperties['label']),
+                array('class' => 'col-sm-2 control-label')) }}
             <div class="col-sm-10">
                 {{ $renderer('create', $className, $fieldName) }}
             </div>
@@ -12,7 +17,10 @@
     <!-- save -->
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            {{ Form::submit('Save', array('class' => 'btn btn-success')) }}
+            <button type="submit" class="btn btn-success">
+                <i class="glyphicon glyphicon-floppy-disk"></i>
+                <span>Save</span>
+            </button>
         </div>
     </div>
 {{ Form::close() }}

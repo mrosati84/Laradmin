@@ -4,21 +4,22 @@ namespace Mrosati84\Laradmin;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class BaseAdminController extends Controller
 {
     const RELATIONSHIP_TYPE   = 0;
     const RELATIONSHIP_MODEL  = 1;
     const RELATIONSHIP_STRING = 2;
-    const UNASSOCIATE         = 0;
+    const UNASSOCIATE         = '';
 
     const FIRST_ITEM          = 0;
 
-    const EMPTY_ITEM          = '---';
+    const EMPTY_INDEX         = '';
+    const EMPTY_VALUE         = '---';
 
     private $className;
     private $lowercaseClassName;
@@ -262,7 +263,7 @@ class BaseAdminController extends Controller
                  * ================= */
                 case 'HasOne':
                 $lists = $relationshipModel::lists($relationshipString, 'id');
-                $lists[self::FIRST_ITEM] = self::EMPTY_ITEM;
+                $lists[self::EMPTY_INDEX] = self::EMPTY_VALUE;
                 ksort($lists);
 
                 return View::make('laradmin::form-fields/hasone', array(
@@ -277,7 +278,7 @@ class BaseAdminController extends Controller
                  * ==================== */
                 case 'BelongsTo':
                 $lists = $relationshipModel::lists($relationshipString, 'id');
-                $lists[self::FIRST_ITEM] = self::EMPTY_ITEM;
+                $lists[self::EMPTY_INDEX] = self::EMPTY_VALUE;
                 ksort($lists);
 
                 return View::make('laradmin::form-fields/belongsto', array(
@@ -288,6 +289,28 @@ class BaseAdminController extends Controller
                 ));
             }
         };
+    }
+
+    /**
+     * get the validation rules for entity. Parent method returns an empty
+     * array by default, this is intended to be overridden in child classes
+     * @return array
+     */
+    public function getValidationRules()
+    {
+        return array();
+    }
+
+    /**
+     * get the validator object for this entity
+     * @return Validator
+     */
+    public function getValidator()
+    {
+        return Validator::make(
+            Input::all(),
+            $this->getValidationRules()
+        );
     }
 
     /**
@@ -375,7 +398,7 @@ class BaseAdminController extends Controller
                     $relatedResults = array();
 
                     // dissociate all the related models from the record
-                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                    if (!$relatedIndexes) {
                         foreach($record->$fieldName as $relatedResult) {
                             $relatedResult->$lowercaseClassName()->dissociate();
                             $relatedResult->save();
@@ -386,9 +409,7 @@ class BaseAdminController extends Controller
 
                     // handle differences between what is transmitted and
                     // what is already associated to the record
-                    if (count($relatedIndexes) > 1) {
-                        array_pop($relatedIndexes); // remove last special item
-
+                    if (count($relatedIndexes) > 0) {
                         // make a diff between the transmitted ids and the
                         // ids already associated to the record
                         $alreadyAssociated = $record->$fieldName->lists('id');
@@ -408,10 +429,8 @@ class BaseAdminController extends Controller
 
                     // associate transmitted ids to the record
                     foreach ($relatedIndexes as $relatedIndex) {
-                        if ($relatedIndex != 0) {
-                            array_push($relatedResults,
-                                $relationshipModel::find($relatedIndex));
-                        }
+                        array_push($relatedResults,
+                            $relationshipModel::find($relatedIndex));
                     }
 
                     $record
@@ -427,14 +446,12 @@ class BaseAdminController extends Controller
                     $relatedIndexes = Input::get($fieldName);
 
                     // dissociate
-                    if (count($relatedIndexes) == 1 && $relatedIndexes[0] == self::UNASSOCIATE) {
+                    if (!$relatedIndexes) {
                         $toDetach = $record->$fieldName->lists('id');
                         $record->$fieldName()->detach($toDetach);
 
                         break;
                     }
-
-                    array_pop($relatedIndexes); // remove last speciali item
 
                     $record
                         ->$fieldName()
@@ -472,7 +489,6 @@ class BaseAdminController extends Controller
     public function create()
     {
         $className = $this->getClassName();
-        $results = $className::all();
 
         return View::make('laradmin::create', array(
             // TODO: these sould be always injected in views
@@ -481,9 +497,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFormFieldRenderer(),
-            'storeRoute' => $this->getRouteForEntity('store'),
-
-            'results' => $results
+            'formRoute' => $this->getRouteForEntity('store')
         ));
     }
 
@@ -495,7 +509,17 @@ class BaseAdminController extends Controller
         $className = $this->getClassName();
         $fields = $this->getFields();
 
+        // create new entity
         $newRecord = new $className;
+
+        // validate entity
+        $validator = $this->getValidator();
+
+        if ($validator->fails()) {
+            return Redirect::route($this->getRouteForEntity('create'))
+                ->withInput()
+                ->withErrors($validator);
+        }
 
         // save regular columns
         foreach($fields as $fieldName => $fieldProperties) {
@@ -554,7 +578,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFormFieldRenderer(),
-            'updateRoute' => $this->getRouteForEntity('update'),
+            'formRoute' => $this->getRouteForEntity('update'),
 
             'results' => $results
         ));
@@ -570,6 +594,15 @@ class BaseAdminController extends Controller
         $fields = $this->getFields();
 
         $record = $className::find($id);
+
+        // validate entity
+        $validator = $this->getValidator();
+
+        if ($validator->fails()) {
+            return Redirect::route($this->getRouteForEntity('edit'), array('id' => $id))
+                ->withInput()
+                ->withErrors($validator);
+        }
 
         // save regular columns
         foreach($fields as $fieldName => $fieldProperties) {

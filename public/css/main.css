@@ -1,3 +1,6 @@
 .right-floated {
     float: right;
 }
+.has-error small {
+    color: #A94442;
+}
