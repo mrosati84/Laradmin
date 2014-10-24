@@ -14,6 +14,17 @@ return array(
     // the default entity handled by Laradmin
     'defaultEntity' => 'Post',
 
+    // authentication callable
+    'authCallable' => function() {
+        return true;
+    },
+
+    // set pagination. default is 10 results per page
+    'paginate' => 3,
+
+    // redirect to this route name if authentication fails
+    'authRedirectRoute' => 'login',
+
     // BEGIN: managed entities list
     'entities' => array(
         'Post' => array(
@@ -46,8 +57,7 @@ return array(
                     'type' => 'datetime',
                     'label' => 'Last update'
                 )
-            ),
-            'filters' => array(),
+            )
         ),
 
         'Comment' => array(
@@ -60,8 +70,7 @@ return array(
                     'type' => 'BelongsTo:Post:title',
                     'label' => 'Post'
                 )
-            ),
-            'filters' => array()
+            )
         ),
 
         'Tag' => array(
@@ -74,8 +83,7 @@ return array(
                     'type' => 'BelongsToMany:Post:title',
                     'label' => 'Posts'
                 )
-            ),
-            'filters' => array()
+            )
         ),
 
         'User' => array(
@@ -83,6 +91,10 @@ return array(
                 'email' => array(
                     'type' => 'email',
                     'label' => 'E-mail'
+                ),
+                'password' => array(
+                    'type' => 'password',
+                    'label' => 'Password'
                 ),
                 'phone' => array(
                     'type' => 'HasOne:Phone:number',
@@ -92,8 +104,7 @@ return array(
                     'type' => 'HasMany:Post:title',
                     'label' => 'Posts'
                 )
-            ),
-            'filters' => array()
+            )
         ),
 
         'Phone' => array(
@@ -106,8 +117,7 @@ return array(
                     'type' => 'BelongsTo:User:email',
                     'label' => 'User'
                 )
-            ),
-            'filters' => array()
+            )
         )
     )
     // END: managed entities list
