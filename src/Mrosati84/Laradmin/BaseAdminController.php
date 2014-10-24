@@ -496,6 +496,8 @@ class BaseAdminController extends Controller
         $className = $this->getClassName();
         $results = $className::paginate(Config::get('laradmin::paginate', self::DEFAULT_PAGINATION));
 
+        Input::flash();
+
         return View::make('laradmin::index', array(
             // TODO: these sould be always injected in views
             'prefix' => $this->getPrefix(),
