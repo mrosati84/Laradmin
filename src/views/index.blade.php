@@ -32,13 +32,13 @@
                                 @foreach($fields as $fieldName => $fieldValue)
                                     <td>{{ $renderer('index', $className, $fieldName, $result->$fieldName) }}</td>
                                 @endforeach
-                                    <td>
-                                        @include('laradmin::actions/index', array(
-                                            'prefix' => $prefix,
-                                            'lowercaseClassName' => $lowercaseClassName,
-                                            'result' => $result,
-                                        ))
-                                    </td>
+                                <td>
+                                    @include('laradmin::actions/index', array(
+                                        'prefix' => $prefix,
+                                        'lowercaseClassName' => $lowercaseClassName,
+                                        'result' => $result,
+                                    ))
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
