@@ -49,13 +49,13 @@ have just published under `config/packages/mrosati84/laradmin/config.php`. You c
 
 ### Laradmin configuration options
 
-| Name                | Type         | Default value    |
-|:--------------------|:------------ |:-----------------|
-| `namespace`         | string       | *empty*          |
-| `prefix`            | string       | admin            |
-| `title`             | string       | Administration   |
-| `defaultEntity`     | string       | *empty*          |
-| `authCallable`      | string       | `function() {}`  |
-| `authRedirectRoute` | string       | login            |
-| `paginate`          | string       | 10               |
-| `entities`          | array        | `array()`        |
+| Name | Type | Description | Default value |
+|:---- |:-----|:------------|:--------------|
+| `namespace` | string | the namespace for your admin classes. Rember to add it to your `composer.json` project file | *empty* |
+| `prefix` | string | the route prefix for the administrator | admin |
+| `title` | string | used in the HTML `<title>`. This is also used inside the Laradmin navigation top menu | Administration |
+| `defaultEntity` | string | the default entity handled by Laradmin. You will be redirected to this entity if you try to navigate the prefix URL without specifying an entity name | *empty* |
+| `authCallable` | string | an authentication callable that must return either `true` or `false` to determine if you can access the administration backend | `function() {}` |
+| `authRedirectRoute` | string | redirect to this route name if the authentication callable returns `false` | login |
+| `paginate` | string | set the default pagination. default is 10 results per page (this value is common for all entities) | 10 |
+| `entities` | array | list of entities handled by Laradmin | `array()` |
