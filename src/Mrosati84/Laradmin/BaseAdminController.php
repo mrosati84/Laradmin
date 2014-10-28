@@ -125,52 +125,26 @@ class BaseAdminController extends Controller
                 $relationshipType = $relationship[self::RELATIONSHIP_TYPE];
                 $relationshipModel = $relationship[self::RELATIONSHIP_MODEL];
                 $relationshipString = $relationship[self::RELATIONSHIP_STRING];
+                $viewData = array(
+                    'prefix' => $this->getPrefix(),
+                    'fieldValue' => $fieldValue,
+                    'relationshipModel' => $relationshipModel,
+                    'relationshipString' => $relationshipString
+                );
 
                 if ($fieldValue) {
                     switch($relationshipType) {
                         case 'BelongsTo':
-                        return View::make('laradmin::fields/belongsto', array(
-                            'prefix' => $this->getPrefix(),
-                            'fieldValue' => $fieldValue,
-                            'relationshipModel' => $relationshipModel,
-                            'relationshipString' => $relationshipString
-                        ));
+                        return View::make('laradmin::fields/belongsto', $viewData);
 
                         case 'HasOne':
-                        return View::make('laradmin::fields/hasone', array(
-                            'prefix' => $this->getPrefix(),
-                            'fieldValue' => $fieldValue,
-                            'relationshipModel' => $relationshipModel,
-                            'relationshipString' => $relationshipString
-                        ));
+                        return View::make('laradmin::fields/hasone', $viewData);
 
                         case 'HasMany':
-                        if (count($fieldValue)) {
-                            return View::make('laradmin::fields/hasmany', array(
-                                'prefix' => $this->getPrefix(),
-                                'fieldValue' => $fieldValue,
-                                'relationshipModel' => $relationshipModel,
-                                'relationshipString' => $relationshipString
-                            ));
-                        } else {
-                            // relationship is empty
-                            return null;
-                        }
+                        return (count($fieldValue)) ? View::make('laradmin::fields/hasmany', $viewData) : null;
 
                         case 'BelongsToMany':
-                        if (count($fieldValue)) {
-                            return View::make('laradmin::fields/belongstomany',
-                                array(
-                                    'prefix' => $this->getPrefix(),
-                                    'fieldValue' => $fieldValue,
-                                    'relationshipModel' => $relationshipModel,
-                                    'relationshipString' => $relationshipString
-                                )
-                            );
-                        } else {
-                            // relationship is empty
-                            return null;
-                        }
+                        return (count($fieldValue)) ? View::make('laradmin::fields/belongstomany', $viewData) : null;
                     }
                 }
             }
