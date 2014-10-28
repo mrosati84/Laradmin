@@ -171,43 +171,31 @@ class BaseAdminController extends Controller
                 return $this->$customRenderMethod();
             }
 
+            // default view data
+            $viewData = array(
+                'fieldName' => $fieldName,
+                'fieldValue' => $fieldValue
+            );
+
             // default rendering
             switch($fieldType) {
                 case 'string':
-                return View::make('laradmin::form-fields/string', array(
-                    'fieldName' => $fieldName,
-                    'fieldValue' => $fieldValue
-                ));
+                return View::make('laradmin::form-fields/string', $viewData);
 
                 case 'email':
-                return View::make('laradmin::form-fields/email', array(
-                    'fieldName' => $fieldName,
-                    'fieldValue' => $fieldValue
-                ));
+                return View::make('laradmin::form-fields/email', $viewData);
 
                 case 'password':
-                return View::make('laradmin::form-fields/password', array(
-                    'fieldName' => $fieldName,
-                    'fieldValue' => $fieldValue
-                ));
+                return View::make('laradmin::form-fields/password', $viewData);
 
                 case 'text':
-                return View::make('laradmin::form-fields/textarea', array(
-                    'fieldName' => $fieldName,
-                    'fieldValue' => $fieldValue
-                ));
+                return View::make('laradmin::form-fields/textarea', $viewData);
 
                 case 'number':
-                return View::make('laradmin::form-fields/number', array(
-                    'fieldName' => $fieldName,
-                    'fieldValue' => $fieldValue
-                ));
+                return View::make('laradmin::form-fields/number', $viewData);
 
                 case 'datetime':
-                return View::make('laradmin::form-fields/datetime', array(
-                    'fieldName' => $fieldName,
-                    'fieldValue' => ($fieldValue) ? $fieldValue : date('Y-m-d H:i:s')
-                ));
+                return View::make('laradmin::form-fields/datetime', $viewData);
             }
 
             // handle relationships
@@ -240,30 +228,16 @@ class BaseAdminController extends Controller
                     'relationshipString' => $relationshipString,
                 ));
 
-                /** ===================
-                 * HAS ONE RELATIONSHIP
-                 * ================= */
+                /** =================================
+                 * HAS ONE / BELONGS TO RELATIONSHIPS
+                 * =============================== */
                 case 'HasOne':
-                $lists = $relationshipModel::lists($relationshipString, 'id');
-                $lists[self::EMPTY_INDEX] = self::EMPTY_VALUE;
-                ksort($lists);
-
-                return View::make('laradmin::form-fields/hasone', array(
-                    'fieldName' => $fieldName,
-                    'lists' => $lists,
-                    'default' => ($fieldValue) ? $fieldValue->id : 0,
-                    'attributes' => array('class' => 'form-control')
-                ));
-
-                /** ======================
-                 * BELONGS TO RELATIONSHIP
-                 * ==================== */
                 case 'BelongsTo':
                 $lists = $relationshipModel::lists($relationshipString, 'id');
                 $lists[self::EMPTY_INDEX] = self::EMPTY_VALUE;
                 ksort($lists);
 
-                return View::make('laradmin::form-fields/belongsto', array(
+                return View::make('laradmin::form-fields/' . $relationshipType, array(
                     'fieldName' => $fieldName,
                     'lists' => $lists,
                     'default' => ($fieldValue) ? $fieldValue->id : 0,
