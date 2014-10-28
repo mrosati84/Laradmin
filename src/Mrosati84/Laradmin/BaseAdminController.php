@@ -160,11 +160,8 @@ class BaseAdminController extends Controller
     public function getDefaultFormFieldRenderer()
     {
         return function($actionName, $className, $fieldName, $fieldValue=null) {
-            $fieldType = Config::get('laradmin::entities.' . $className .
-                '.fields.' . $fieldName . '.type');
-
-            $customRenderMethod = 'render' . ucfirst($actionName) .
-                ucfirst(camel_case(strtolower($fieldName)));
+            $fieldType = $this->getFieldType($className, $fieldName);
+            $customRenderMethod = $this->getCustomRenderMethodName($actionName, $fieldName);
 
             if (method_exists($this, $customRenderMethod)) {
                 // call custom rendering method
