@@ -6,6 +6,10 @@ body {
     margin-top: 20px;
 }
 
+.navbar-default {
+    margin-bottom: 10px;
+}
+
 .right-floated {
     float: right;
 }
