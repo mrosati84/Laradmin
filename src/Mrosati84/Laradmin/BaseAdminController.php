@@ -165,7 +165,7 @@ class BaseAdminController extends Controller
 
             if (method_exists($this, $customRenderMethod)) {
                 // call custom rendering method
-                return $this->$customRenderMethod();
+                return $this->$customRenderMethod($fieldValue);
             }
 
             // default view data
