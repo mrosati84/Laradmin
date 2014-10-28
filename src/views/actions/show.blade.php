@@ -3,7 +3,7 @@
         <a class="btn btn-success" href="{{ route($prefix . '.' . $lowercaseClassName . '.index') }}"><i class="glyphicon glyphicon-arrow-left"></i></a>
         <a class="btn btn-warning" href="{{ route($prefix . '.' . $lowercaseClassName . '.edit', array('id' => $results->id)) }}"><i class="glyphicon glyphicon-pencil"></i></a>
         {{ Form::close() }}
-    <button class="btn btn-danger" type="submit">
+    <button onclick="return confirm('Are you sure?');" class="btn btn-danger" type="submit">
         <i class="glyphicon glyphicon-remove"></i>
     </button>
 </div>
