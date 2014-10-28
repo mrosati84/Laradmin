@@ -2,6 +2,10 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+.page-header {
+    margin-top: 20px;
+}
+
 .right-floated {
     float: right;
 }
