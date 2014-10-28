@@ -14,7 +14,7 @@ I suggest you to always use the `dev-develop` branch).
 Your Composer `"require"` section should look like this on an empty Laravel
 installation:
 
-```
+```json
 "require": {
     "laravel/framework": "4.2.*",
     "mrosati84/laradmin": "dev-develop"
@@ -45,8 +45,17 @@ Configuring Laradmin
 --------------------
 
 All the configuration is handled by the package configuration file that you
-have just published under `config/packages/mrosati84/laradmin/config.php`.
+have just published under `config/packages/mrosati84/laradmin/config.php`. You can watch an [example configuration file](https://github.com/mrosati84/Laradmin/blob/develop/src/config/config.php) is provided with the package itself.
 
+### Laradmin configuration options
 
-
-
+| Name                | Type         | Default value    |
+|---------------------|:------------:|------------------|
+| `namespace`         | string       | *empty*          |
+| `prefix`            | string       | admin            |
+| `title`             | string       | Administration   |
+| `defaultEntity`     | string       | *empty*          |
+| `authCallable`      | string       | `function() {}`  |
+| `authRedirectRoute` | string       | login            |
+| `paginate`          | string       | 10               |
+| `entities`          | array        | `array()`        |
