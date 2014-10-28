@@ -1,9 +1,8 @@
-Laradmin
-========
+# Laradmin
 
 Ad administration package for the [Laravel](http://www.laravel.com) framework.
 
-Installation
+## Installation
 ------------
 
 To use Laradmin in your Laravel project, you first have to include it in your
@@ -41,8 +40,7 @@ frontend:
 
     $ php artisan view:publish mrosati84/laradmin
 
-Configuring Laradmin
---------------------
+## Configuring Laradmin
 
 All the configuration is handled by the package configuration file that you
 have just published under `config/packages/mrosati84/laradmin/config.php`. You can watch an [example configuration file](https://github.com/mrosati84/Laradmin/blob/develop/src/config/config.php) is provided with the package itself.
