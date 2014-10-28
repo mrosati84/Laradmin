@@ -203,22 +203,12 @@ class BaseAdminController extends Controller
             $relationshipString = $relationship[self::RELATIONSHIP_STRING];
 
             switch($relationshipType) {
-                /** ====================
-                 * HAS MANY RELATIONSHIP
-                 * ================== */
+                /** =======================================
+                 * HAS MANY / BELONGS TO MANY RELATIONSHIPS
+                 * ===================================== */
                 case 'HasMany':
-                return View::make('laradmin::form-fields/hasmany', array(
-                    'fieldName' => $fieldName,
-                    'fieldValue' => $fieldValue,
-                    'relationshipModel' => $relationshipModel,
-                    'relationshipString' => $relationshipString,
-                ));
-
-                /** ===========================
-                 * BELONGS TO MANY RELATIONSHIP
-                 * ========================= */
                 case 'BelongsToMany':
-                return View::make('laradmin::form-fields/belongstomany', array(
+                return View::make('laradmin::form-fields/' . strtolower($relationshipType), array(
                     'fieldName' => $fieldName,
                     'fieldValue' => $fieldValue,
                     'relationshipModel' => $relationshipModel,
@@ -234,7 +224,7 @@ class BaseAdminController extends Controller
                 $lists[self::EMPTY_INDEX] = self::EMPTY_VALUE;
                 ksort($lists);
 
-                return View::make('laradmin::form-fields/' . $relationshipType, array(
+                return View::make('laradmin::form-fields/' . strtolower($relationshipType), array(
                     'fieldName' => $fieldName,
                     'lists' => $lists,
                     'default' => ($fieldValue) ? $fieldValue->id : 0,
