@@ -50,7 +50,7 @@ have just published under `config/packages/mrosati84/laradmin/config.php`. You c
 ### Laradmin configuration options
 
 | Name                | Type         | Default value    |
-|---------------------|:------------:|------------------|
+|:--------------------|:------------ |:-----------------|
 | `namespace`         | string       | *empty*          |
 | `prefix`            | string       | admin            |
 | `title`             | string       | Administration   |
