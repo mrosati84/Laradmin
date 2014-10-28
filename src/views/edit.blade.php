@@ -3,14 +3,17 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
-                <h1>Edit {{ $className }}</h1>
-            </div>
-            <p>
-                <a class="btn btn-success" href="{{ route($prefix . '.' . $lowercaseClassName . '.index') }}">
-                    <i class="glyphicon glyphicon-arrow-left"></i> Back to list
-                </a>
-            </p>
+            @include('laradmin::partials/page-header', array(
+                'verb' => 'Edit',
+                'className' => $className
+            ))
+            @include('laradmin::partials/main-action-button', array(
+                'action' => 'index',
+                'text' => 'Back to list',
+                'glyphicon' => 'arrow-left',
+                'prefix' => $prefix,
+                'lowercaseClassName' => $lowercaseClassName
+            ))
         </div>
     </div>
 

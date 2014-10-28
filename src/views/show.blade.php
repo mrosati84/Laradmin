@@ -3,9 +3,17 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
-                <h1>Show {{ $className }}</h1>
-            </div>
+            @include('laradmin::partials/page-header', array(
+                'verb' => 'Show',
+                'className' => $className
+            ))
+            @include('laradmin::partials/main-action-button', array(
+                'action' => 'index',
+                'text' => 'Back to list',
+                'glyphicon' => 'arrow-left',
+                'prefix' => $prefix,
+                'lowercaseClassName' => $lowercaseClassName
+            ))
         </div>
     </div>
 

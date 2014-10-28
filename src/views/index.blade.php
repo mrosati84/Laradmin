@@ -3,14 +3,17 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header">
-                <h1>List all {{ $className }}</h1>
-            </div>
-            <p>
-                <a class="btn btn-success" href="{{ route($prefix . '.' . $lowercaseClassName . '.create') }}">
-                    <i class="glyphicon glyphicon-plus"></i> Create new
-                </a>
-            </p>
+            @include('laradmin::partials/page-header', array(
+                'verb' => 'List all',
+                'className' => $className
+            ))
+            @include('laradmin::partials/main-action-button', array(
+                'action' => 'create',
+                'text' => 'Create new',
+                'glyphicon' => 'plus',
+                'prefix' => $prefix,
+                'lowercaseClassName' => $lowercaseClassName
+            ))
         </div>
     </div>
 
