@@ -3,7 +3,6 @@
 Ad administration package for the [Laravel](http://www.laravel.com) framework.
 
 ## Installation
-------------
 
 To use Laradmin in your Laravel project, you first have to include it in your
 composer.json dependencies. Refer to [https://packagist.org/packages/mrosati84/laradmin](https://packagist.org/packages/mrosati84/laradmin)
