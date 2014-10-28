@@ -1,6 +1,6 @@
 <div class="row {{ ($errors->first($fieldName)) ? 'has-error' : '' }}">
     <div class="col-sm-11">
-        {{ Form::select($fieldName, $lists, $default, $attributes) }}
+        {{ Form::select($fieldName, $lists, $fieldValue, array('class' => 'form-control')) }}
         @if($errors->first($fieldName))
             <small>{{ $errors->first($fieldName) }}</small>
         @endif

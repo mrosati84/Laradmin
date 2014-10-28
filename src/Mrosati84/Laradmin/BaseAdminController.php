@@ -177,22 +177,13 @@ class BaseAdminController extends Controller
             // default rendering
             switch($fieldType) {
                 case 'string':
-                return View::make('laradmin::form-fields/string', $viewData);
-
                 case 'email':
-                return View::make('laradmin::form-fields/email', $viewData);
-
                 case 'password':
-                return View::make('laradmin::form-fields/password', $viewData);
-
-                case 'text':
-                return View::make('laradmin::form-fields/textarea', $viewData);
-
+                case 'textarea':
                 case 'number':
-                return View::make('laradmin::form-fields/number', $viewData);
-
                 case 'datetime':
-                return View::make('laradmin::form-fields/datetime', $viewData);
+
+                return View::make('laradmin::form-fields/' . $fieldType, $viewData);
             }
 
             // handle relationships
@@ -226,9 +217,8 @@ class BaseAdminController extends Controller
 
                 return View::make('laradmin::form-fields/' . strtolower($relationshipType), array(
                     'fieldName' => $fieldName,
-                    'lists' => $lists,
-                    'default' => ($fieldValue) ? $fieldValue->id : 0,
-                    'attributes' => array('class' => 'form-control')
+                    'fieldValue' => ($fieldValue) ? $fieldValue->id : 0,
+                    'lists' => $lists
                 ));
             }
         };
@@ -488,7 +478,7 @@ class BaseAdminController extends Controller
             switch ($fieldProperties['type'] ) {
                 case 'string':
                 case 'number':
-                case 'text':
+                case 'textarea':
                 case 'email':
                 case 'password':
                 case 'datetime':
@@ -574,7 +564,7 @@ class BaseAdminController extends Controller
             switch ($fieldProperties['type'] ) {
                 case 'string':
                 case 'number':
-                case 'text':
+                case 'textarea':
                 case 'email':
                 case 'password':
                 case 'datetime':

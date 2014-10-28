@@ -34,7 +34,7 @@ return array(
                     'label' => 'Post title'
                 ),
                 'body' => array(
-                    'type' => 'text',
+                    'type' => 'textarea',
                     'label' => 'Post body'
                 ),
                 'comments' => array(
@@ -63,7 +63,7 @@ return array(
         'Comment' => array(
             'fields' => array(
                 'body' => array(
-                    'type' => 'text',
+                    'type' => 'textarea',
                     'label' => 'Comment body'
                 ),
                 'post' => array(
