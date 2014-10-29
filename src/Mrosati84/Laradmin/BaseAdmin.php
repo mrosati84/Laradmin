@@ -239,6 +239,11 @@ class BaseAdmin extends BaseAdminController
         return array();
     }
 
+    public function getFilters()
+    {
+        return array();
+    }
+
     /**
      * get the validator object for this entity
      * @return Validator

@@ -19,7 +19,12 @@ class BaseAdminController extends Controller
     public function index()
     {
         $className = $this->getClassName();
+
+        // filter results
+        $filters = $this->getFilters();
+        $queryFilter = new QueryFilter($filters);
         $results = $className::paginate(Config::get('laradmin::paginate', self::DEFAULT_PAGINATION));
+        $filteredResults = $queryFilter->filter($results);
 
         Input::flash();
 
@@ -31,7 +36,7 @@ class BaseAdminController extends Controller
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFieldRenderer(),
 
-            'results' => $results
+            'results' => $filteredResults
         ));
     }
 
