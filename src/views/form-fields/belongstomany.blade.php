@@ -14,7 +14,7 @@
     </div>
     <div class="col-sm-1">
         <a class="btn btn-primary right-floated" href="#">
-            <i class="glyphicon glyphicon-plus"></i>
+            <i class="glyphicon glyphicon-plus"></i> Add
         </a>
     </div>
 </div>
