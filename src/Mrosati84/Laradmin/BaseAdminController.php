@@ -78,7 +78,7 @@ class BaseAdminController extends Controller
      * @param  string $action the action name
      * @return string
      */
-    private function getRouteForEntity($action = 'index')
+    private function getRouteNameForEntity($action = 'index')
     {
         return $this->getPrefix() . '.' .
             $this->getLowercaseClassName() . '.' . $action;
@@ -460,7 +460,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFormFieldRenderer(),
-            'formRoute' => $this->getRouteForEntity('store')
+            'formRoute' => $this->getRouteNameForEntity('store')
         ));
     }
 
@@ -479,7 +479,7 @@ class BaseAdminController extends Controller
         $validator = $this->getValidator();
 
         if ($validator->fails()) {
-            return Redirect::route($this->getRouteForEntity('create'))
+            return Redirect::route($this->getRouteNameForEntity('create'))
                 ->with(array(
                     'calloutTitle' => 'Validation errors',
                     'calloutMessage' => 'There are validation errors that must be fixed. Please check your input data before submitting the form again.',
@@ -509,10 +509,10 @@ class BaseAdminController extends Controller
         try {
             if ($newRecord->save()) {
                 $this->saveRelatedModels($newRecord);
-                return Redirect::route($this->getRouteForEntity());
+                return Redirect::route($this->getRouteNameForEntity());
             }
         } catch(QueryException $e) {
-            return Redirect::route($this->getRouteForEntity('create'))
+            return Redirect::route($this->getRouteNameForEntity('create'))
                 ->with(array(
                     'calloutTitle' => 'Error running query',
                     'calloutMessage' => $this->getPreformattedText($e->getMessage()),
@@ -558,7 +558,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFormFieldRenderer(),
-            'formRoute' => $this->getRouteForEntity('update'),
+            'formRoute' => $this->getRouteNameForEntity('update'),
 
             'results' => $results
         ));
@@ -579,7 +579,7 @@ class BaseAdminController extends Controller
         $validator = $this->getValidator();
 
         if ($validator->fails()) {
-            return Redirect::route($this->getRouteForEntity('edit'), array('id' => $id))
+            return Redirect::route($this->getRouteNameForEntity('edit'), array('id' => $id))
                 ->with(array(
                     'calloutTitle' => 'Validation errors',
                     'calloutMessage' => 'There are validation errors that must be fixed. Please check your input data before submitting the form again.',
@@ -611,10 +611,10 @@ class BaseAdminController extends Controller
         try {
             if ($record->save()) {
                 $this->saveRelatedModels($record);
-                return Redirect::route($this->getRouteForEntity());
+                return Redirect::route($this->getRouteNameForEntity());
             }
         } catch(QueryException $e) {
-            return Redirect::route($this->getRouteForEntity('edit'), array('id' => $id))
+            return Redirect::route($this->getRouteNameForEntity('edit'), array('id' => $id))
                 ->with(array(
                     'calloutTitle' => 'Error running query',
                     'calloutMessage' => $this->getPreformattedText($e->getMessage()),
@@ -632,7 +632,7 @@ class BaseAdminController extends Controller
         $className = $this->getClassName();
 
         if ($className::destroy($id)) {
-            return Redirect::route($this->getRouteForEntity());
+            return Redirect::route($this->getRouteNameForEntity());
         }
     }
 }
