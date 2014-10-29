@@ -1,3 +1,15 @@
-.has-error small {
-    color: #A94442;
-}
+/**
+ * Form errors
+ */
+.has-error small { color: #A94442; }
+
+/**
+ * Callouts
+ */
+.bs-callout { border-color: #EEE; }
+
+.bs-callout-warning { border-left-color: #F0AD4E; }
+.bs-callout-danger  { border-left-color: #A94442; }
+
+.bs-callout-warning h4 { color: #F0AD4E; }
+.bs-callout-danger  h4 { color: #A94442; }
