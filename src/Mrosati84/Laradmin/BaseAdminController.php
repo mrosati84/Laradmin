@@ -257,6 +257,16 @@ class BaseAdminController extends Controller
     }
 
     /**
+     * returns text wrapper in <pre> tag
+     * @param  string $text
+     * @return string
+     */
+    private function getPreformattedText($text)
+    {
+        return '<pre>' . $text . '</pre>';
+    }
+
+    /**
      * pre-process an input field, before saving it into the model
      * @param  string $fieldName
      * @param  mixed $fieldValue
@@ -470,6 +480,11 @@ class BaseAdminController extends Controller
 
         if ($validator->fails()) {
             return Redirect::route($this->getRouteForEntity('create'))
+                ->with(array(
+                    'calloutTitle' => 'Validation errors',
+                    'calloutMessage' => 'There are validation errors that must be fixed. Please check your input data before submitting the form again.',
+                    'calloutClass' => 'warning',
+                ))
                 ->withInput()
                 ->withErrors($validator);
         }
@@ -498,7 +513,11 @@ class BaseAdminController extends Controller
             }
         } catch(QueryException $e) {
             return Redirect::route($this->getRouteForEntity('create'))
-                ->with('queryException', $e->getMessage());
+                ->with(array(
+                    'calloutTitle' => 'Error running query',
+                    'calloutMessage' => $this->getPreformattedText($e->getMessage()),
+                    'calloutClass' => 'danger',
+                ));
         }
     }
 
@@ -561,6 +580,11 @@ class BaseAdminController extends Controller
 
         if ($validator->fails()) {
             return Redirect::route($this->getRouteForEntity('edit'), array('id' => $id))
+                ->with(array(
+                    'calloutTitle' => 'Validation errors',
+                    'calloutMessage' => 'There are validation errors that must be fixed. Please check your input data before submitting the form again.',
+                    'calloutClass' => 'warning',
+                ))
                 ->withInput()
                 ->withErrors($validator);
         }
@@ -591,7 +615,11 @@ class BaseAdminController extends Controller
             }
         } catch(QueryException $e) {
             return Redirect::route($this->getRouteForEntity('edit'), array('id' => $id))
-                ->with('queryException', $e->getMessage());
+                ->with(array(
+                    'calloutTitle' => 'Error running query',
+                    'calloutMessage' => $this->getPreformattedText($e->getMessage()),
+                    'calloutClass' => 'danger',
+                ));
         }
     }
 

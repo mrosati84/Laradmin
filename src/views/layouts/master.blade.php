@@ -20,15 +20,13 @@
 <body>
 
 <div class="container-fluid">
+    <!-- laradmin main navigation -->
     @include('laradmin::navigation')
 
-    @if(Session::get('queryException'))
-        <div class="bs-callout bs-callout-danger">
-            <h4>Error running query</h4>
-            <p><pre>{{ Session::get('queryException') }}</pre></p>
-        </div>
-    @endif
+    <!-- callout messages -->
+    @include('laradmin::callout')
 
+    <!-- main content -->
     @yield('content')
 </div>
 
