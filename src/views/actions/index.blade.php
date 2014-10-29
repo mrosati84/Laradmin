@@ -4,6 +4,6 @@
         <a class="btn btn-warning" href="{{ route($prefix . '.' . $lowercaseClassName . '.edit', array('id' => $result->id)) }}"><i class="glyphicon glyphicon-pencil"></i></a>
         {{ Form::close() }}
     <button onclick="return confirm('Are you sure?');" class="btn btn-danger" type="submit">
-        <i class="glyphicon glyphicon-remove"></i>
+        <i class="glyphicon glyphicon-trash"></i>
     </button>
 </div>
