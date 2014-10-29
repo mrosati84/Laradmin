@@ -141,7 +141,9 @@ class BaseAdminController extends Controller
 
                         case 'HasMany':
                         case 'BelongsToMany':
-                        return (count($fieldValue)) ? View::make('laradmin::fields/' . strtolower($relationshipType), $viewData) : null;
+                        return (count($fieldValue))
+                            ? View::make('laradmin::fields/' . strtolower($relationshipType), $viewData)
+                            : null;
                     }
                 }
             }
@@ -478,7 +480,9 @@ class BaseAdminController extends Controller
             return Redirect::route($this->getRouteNameForEntity('create'))
                 ->with(array(
                     'calloutTitle' => 'Validation errors',
-                    'calloutMessage' => 'There are validation errors that must be fixed. Please check your input data before submitting the form again.',
+                    'calloutMessage' => 'There are validation errors that must
+                        be fixed. Please check your input data before
+                        submitting the form again.',
                     'calloutClass' => 'warning',
                 ))
                 ->withInput()
@@ -578,7 +582,9 @@ class BaseAdminController extends Controller
             return Redirect::route($this->getRouteNameForEntity('edit'), array('id' => $id))
                 ->with(array(
                     'calloutTitle' => 'Validation errors',
-                    'calloutMessage' => 'There are validation errors that must be fixed. Please check your input data before submitting the form again.',
+                    'calloutMessage' => 'There are validation errors that must
+                        be fixed. Please check your input data before
+                        submitting the form again.',
                     'calloutClass' => 'warning',
                 ))
                 ->withInput()
