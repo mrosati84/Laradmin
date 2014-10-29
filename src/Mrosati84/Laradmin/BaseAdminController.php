@@ -136,16 +136,12 @@ class BaseAdminController extends Controller
                 if ($fieldValue) {
                     switch($relationshipType) {
                         case 'BelongsTo':
-                        return View::make('laradmin::fields/belongsto', $viewData);
-
                         case 'HasOne':
-                        return View::make('laradmin::fields/hasone', $viewData);
+                        return View::make('laradmin::fields/' . strtolower($relationshipType), $viewData);
 
                         case 'HasMany':
-                        return (count($fieldValue)) ? View::make('laradmin::fields/hasmany', $viewData) : null;
-
                         case 'BelongsToMany':
-                        return (count($fieldValue)) ? View::make('laradmin::fields/belongstomany', $viewData) : null;
+                        return (count($fieldValue)) ? View::make('laradmin::fields/' . strtolower($relationshipType), $viewData) : null;
                     }
                 }
             }
