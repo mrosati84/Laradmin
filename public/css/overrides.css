@@ -1,0 +1,20 @@
+/**
+ * jQuery UI widgets tweaking
+ */
+
+.ui-widget,
+.ui-widget input,
+.ui-widget button {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+}
+
+.ui-datepicker {
+    padding: .7em .7em .4em .7em;
+}
+
+.ui_tpicker_hour_label,
+.ui_tpicker_minute_label,
+.ui_tpicker_second_label {
+    margin: .4em 0 .4em 0;
+}

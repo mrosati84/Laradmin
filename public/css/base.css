@@ -1,0 +1,7 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+td {
+    max-width: 200px;
+}

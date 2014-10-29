@@ -10,7 +10,12 @@
     <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/vendor/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/vendor/bootstrap-theme.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/vendor/jquery-ui.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/main.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/base.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/layout.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/modules.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/helper-classes.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/themes.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('packages/mrosati84/laradmin/css/overrides.css') }}">
 </head>
 <body>
 
