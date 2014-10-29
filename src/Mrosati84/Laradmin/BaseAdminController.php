@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\QueryException;
 
 class BaseAdminController extends Controller
 {
@@ -490,9 +491,14 @@ class BaseAdminController extends Controller
         }
 
         // persist record
-        if ($newRecord->save()) {
-            $this->saveRelatedModels($newRecord);
-            return Redirect::route($this->getRouteForEntity());
+        try {
+            if ($newRecord->save()) {
+                $this->saveRelatedModels($newRecord);
+                return Redirect::route($this->getRouteForEntity());
+            }
+        } catch(QueryException $e) {
+            return Redirect::route($this->getRouteForEntity('create'))
+                ->with('queryException', $e->getMessage());
         }
     }
 
@@ -578,9 +584,14 @@ class BaseAdminController extends Controller
             }
         }
 
-        if ($record->save()) {
-            $this->saveRelatedModels($record);
-            return Redirect::route($this->getRouteForEntity());
+        try {
+            if ($record->save()) {
+                $this->saveRelatedModels($record);
+                return Redirect::route($this->getRouteForEntity());
+            }
+        } catch(QueryException $e) {
+            return Redirect::route($this->getRouteForEntity('edit'), array('id' => $id))
+                ->with('queryException', $e->getMessage());
         }
     }
 
