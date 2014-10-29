@@ -20,7 +20,6 @@ class LaradminServiceProvider extends ServiceProvider {
 
         foreach($entities as $entity => $properties) {
             $fullClassName = $namespace . '\\' . $entity . 'Admin';
-            $baseAdminController = 'Mrosati84\Laradmin\BaseAdminController';
 
             // register admin classes bindings
             App::bind($fullClassName, function() use ($fullClassName, $entity) {
