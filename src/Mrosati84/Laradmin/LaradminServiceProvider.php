@@ -27,7 +27,7 @@ class LaradminServiceProvider extends ServiceProvider {
             });
 
             // register custom filters classes
-            App::bind('AuthenticationFilter', 'Mrosati84\Laradmin\Filters\AuthenticationFilter');
+            App::bind('AuthenticationFilter', 'Mrosati84\Laradmin\RouteFilters\AuthenticationFilter');
 
             // register custom route filters
             Route::filter('laradmin.auth', 'AuthenticationFilter');

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mrosati84\Laradmin\Filters;
+namespace Mrosati84\Laradmin\RouteFilters;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
