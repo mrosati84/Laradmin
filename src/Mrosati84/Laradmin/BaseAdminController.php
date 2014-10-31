@@ -20,13 +20,14 @@ class BaseAdminController extends Controller
     {
         $className = $this->getClassName();
 
+        Input::flash();
+
         // filter results
         $filters = $this->getFilters();
         $queryFilter = new QueryFilter($filters);
+        $filtersForm = $queryFilter->getFiltersForm();
         $results = $className::paginate(Config::get('laradmin::paginate', self::DEFAULT_PAGINATION));
         $filteredResults = $queryFilter->filter($results);
-
-        Input::flash();
 
         return View::make('laradmin::index', array(
             // TODO: these sould be always injected in views
@@ -35,6 +36,7 @@ class BaseAdminController extends Controller
             'lowercaseClassName' => $this->getLowercaseClassName(),
             'fields' => $this->getFields(),
             'renderer' => $this->getDefaultFieldRenderer(),
+            'filtersForm' => $filtersForm,
 
             'results' => $filteredResults
         ));

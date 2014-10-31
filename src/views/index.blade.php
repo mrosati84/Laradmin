@@ -18,7 +18,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-10">
+        <div class="{{ ($filtersForm) ? 'col-md-10' : 'col-md-12' }}">
             @if ($results)
                 <table class="table table-striped table-hover">
                     <thead>
@@ -49,34 +49,9 @@
             @endif
         </div>
 
-        <!-- START: hard-coded filters, just for testing purposes -->
-        <div class="col-md-2">
-            <h4>Filters</h4>
-            <form action="/admin/post" method="GET" role="form">
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    {{ Form::text('title', Input::old('title'), array('class' => 'form-control')) }}
-                </div>
-                <div class="form-group">
-                    <label for="user">Author</label>
-                    <select class="form-control" name="user" id="user">
-                        <option value="1">mrosati@h-art.com</option>
-                        <option value="2">mfiaschini@h-art.com</option>
-                        <option value="3">ndelazzari@h-art.com</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="title">Creation date</label>
-                    <input class="datetime form-control" type="text" name="created_at">
-                </div>
-                <div class="form-group">
-                    <label for="title">Last update</label>
-                    <input class="datetime form-control" type="text" name="updated_at">
-                </div>
-                <input type="submit" class="btn btn-default" value="Filter">
-            </form>
-        </div>
-        <!-- END: hard-coded filters, just for testing purposes -->
+        <!-- START: filters -->
+        {{ $filtersForm }}
+        <!-- END: filters -->
     </div>
 
     @include('laradmin::pagination')
